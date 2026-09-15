@@ -181,7 +181,7 @@ function atualizarAutocompleteHint() {
     if (matches.length > 0 && matches[0] !== valor.toLowerCase()) {
       const match = matches[0];
       autocomplete.dataset.cmd = match;
-      const label = isTouchDevice() ? '👆 Toque aqui para autocompletar' : 'Tab ou clique';
+      const label = 'Tab ou clique';
       autocomplete.innerHTML = `<span>${label} → <strong>${match}</strong></span>`;
       autocomplete.classList.add('visible');
       return;
