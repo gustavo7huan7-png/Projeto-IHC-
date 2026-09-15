@@ -24,16 +24,42 @@ function initTela1() {
   // Animação do título
   animarTitulo();
 
-  // Event listeners do input
+  // Event listeners do input — 'input' é essencial para teclados virtuais mobile (Gboard, iOS, etc.)
   cliInput.addEventListener('keydown', handleCliKeydown);
+  cliInput.addEventListener('input', atualizarAutocompleteHint);
+  cliInput.addEventListener('keyup', atualizarAutocompleteHint);
 
-  // ── Card de autocomplete clicável no mobile ──
+  // ── Card de autocomplete clicável / tocável no mobile e desktop ──
   const autocompleteEl = document.getElementById('cli-autocomplete');
-  autocompleteEl.addEventListener('click', () => {
-    autocompletar();
-    // Retorna o foco ao input após o toque (importante no mobile)
-    setTimeout(() => cliInput.focus(), 50);
-  });
+  if (autocompleteEl) {
+    const acionarSugestao = (e) => {
+      // e.preventDefault() no pointerdown/touchstart é fundamental:
+      // impede que o input perca o foco (blur) e impede que o teclado virtual feche/pule a tela!
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      autocompletar();
+    };
+
+    autocompleteEl.addEventListener('pointerdown', acionarSugestao);
+    autocompleteEl.addEventListener('touchstart', acionarSugestao, { passive: false });
+    autocompleteEl.addEventListener('click', acionarSugestao);
+  }
+
+  // ── Permitir clicar em comandos dentro do terminal (ex: /help, /setnome) ──
+  if (cliOutput) {
+    cliOutput.addEventListener('click', (e) => {
+      const cmdLink = e.target.closest('.cli-cmd-link');
+      if (cmdLink && cmdLink.dataset.cmd) {
+        cliInput.value = cmdLink.dataset.cmd + ' ';
+        cliInput.focus();
+        const len = cliInput.value.length;
+        cliInput.setSelectionRange(len, len);
+        atualizarAutocompleteHint();
+      }
+    });
+  }
 
   // Focar no input
   setTimeout(() => cliInput.focus(), 500);
@@ -41,7 +67,7 @@ function initTela1() {
   // Welcome message
   setTimeout(() => {
     adicionarLinhaOutput('Sistema IHC Terminal v1.0', 'info');
-    adicionarLinhaOutput('Digite /help para ver os comandos disponíveis.', 'response');
+    adicionarHtmlOutput('Digite <span class="cli-cmd-link" data-cmd="/help">/help</span> para ver os comandos disponíveis.', 'response');
     adicionarLinhaOutput('', 'response');
   }, 1800);
 }
@@ -110,7 +136,10 @@ function handleCliKeydown(e) {
       executarComando(cmd);
       cliInput.value = '';
     }
-    autocomplete.classList.remove('visible');
+    if (autocomplete) {
+      autocomplete.classList.remove('visible');
+      autocomplete.dataset.cmd = '';
+    }
     return;
   }
 
@@ -120,6 +149,7 @@ function handleCliKeydown(e) {
     if (posicaoHistorico > 0) {
       posicaoHistorico--;
       cliInput.value = historicoComandos[posicaoHistorico];
+      atualizarAutocompleteHint();
     }
     return;
   }
@@ -130,41 +160,61 @@ function handleCliKeydown(e) {
     if (posicaoHistorico < historicoComandos.length - 1) {
       posicaoHistorico++;
       cliInput.value = historicoComandos[posicaoHistorico];
+      atualizarAutocompleteHint();
     } else {
       posicaoHistorico = historicoComandos.length;
       cliInput.value = '';
+      atualizarAutocompleteHint();
     }
     return;
   }
+}
 
-  // Mostrar hint de autocomplete enquanto digita
-  setTimeout(() => {
-    const valor = cliInput.value.trim();
-    if (valor.startsWith('/') && valor.length > 1) {
-      const matches = COMANDOS.filter(c => c.startsWith(valor.toLowerCase()));
-      if (matches.length > 0 && matches[0] !== valor.toLowerCase()) {
-        // Label adaptado: "Toque" no mobile, "Tab" no desktop
-        const label = isTouchDevice() ? '👆 Toque' : 'Tab';
-        autocomplete.textContent = `${label} → ${matches[0]}`;
-        autocomplete.classList.add('visible');
-      } else {
-        autocomplete.classList.remove('visible');
-      }
-    } else {
-      autocomplete.classList.remove('visible');
+// ── Atualizar hint de autocomplete em tempo real ──
+function atualizarAutocompleteHint() {
+  const autocomplete = document.getElementById('cli-autocomplete');
+  if (!autocomplete || !cliInput) return;
+
+  const valor = cliInput.value.trim();
+  if (valor.startsWith('/')) {
+    const matches = COMANDOS.filter(c => c.startsWith(valor.toLowerCase()));
+    if (matches.length > 0 && matches[0] !== valor.toLowerCase()) {
+      const match = matches[0];
+      autocomplete.dataset.cmd = match;
+      const label = isTouchDevice() ? '👆 Toque aqui para autocompletar' : 'Tab ou clique';
+      autocomplete.innerHTML = `<span>${label} → <strong>${match}</strong></span>`;
+      autocomplete.classList.add('visible');
+      return;
     }
-  }, 0);
+  }
+
+  autocomplete.classList.remove('visible');
+  autocomplete.dataset.cmd = '';
 }
 
 // ── Autocompletar ──
 function autocompletar() {
-  const valor = cliInput.value.trim().toLowerCase();
-  if (!valor.startsWith('/')) return;
+  const autocomplete = document.getElementById('cli-autocomplete');
+  const targetCmd = autocomplete ? autocomplete.dataset.cmd : null;
+  let cmdFinal = targetCmd;
 
-  const matches = COMANDOS.filter(c => c.startsWith(valor));
-  if (matches.length > 0) {
-    cliInput.value = matches[0] + ' ';
-    document.getElementById('cli-autocomplete').classList.remove('visible');
+  if (!cmdFinal) {
+    const valor = cliInput.value.trim().toLowerCase();
+    if (valor.startsWith('/')) {
+      const matches = COMANDOS.filter(c => c.startsWith(valor));
+      if (matches.length > 0) cmdFinal = matches[0];
+    }
+  }
+
+  if (cmdFinal) {
+    cliInput.value = cmdFinal + ' ';
+    if (autocomplete) {
+      autocomplete.classList.remove('visible');
+      autocomplete.dataset.cmd = '';
+    }
+    cliInput.focus();
+    const len = cliInput.value.length;
+    cliInput.setSelectionRange(len, len);
   }
 }
 
@@ -236,14 +286,14 @@ function cmdHelp() {
   adicionarLinhaOutput('║     COMANDOS DISPONÍVEIS             ║', 'info');
   adicionarLinhaOutput('╠══════════════════════════════════════╣', 'info');
   adicionarLinhaOutput('', 'help');
-  adicionarLinhaOutput('  /setnome "Nome"   → Define seu nome', 'help');
-  adicionarLinhaOutput('  /setcurso "Curso" → Define seu curso', 'help');
-  adicionarLinhaOutput('  /setidade "Idade" → Define idade (16-55)', 'help');
-  adicionarLinhaOutput('  /continuar        → Valida e avança', 'help');
-  adicionarLinhaOutput('  /limpatela        → Limpa o terminal', 'help');
-  adicionarLinhaOutput('  /telabin          → Efeito Matrix', 'help');
-  adicionarLinhaOutput('  /apagarsite       → Simulação de delete', 'help');
-  adicionarLinhaOutput('  /help             → Mostra esta lista', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/setnome">/setnome "Nome"</span>&nbsp;&nbsp;&nbsp;→ Define seu nome', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/setcurso">/setcurso "Curso"</span>&nbsp;&nbsp;→ Define seu curso', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/setidade">/setidade "Idade"</span>&nbsp;&nbsp;→ Define idade (16-55)', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/continuar">/continuar</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Valida e avança', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/limpatela">/limpatela</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Limpa o terminal', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/telabin">/telabin</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Efeito Matrix', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/apagarsite">/apagarsite</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Simulação de delete', 'help');
+  adicionarHtmlOutput('&nbsp;&nbsp;<span class="cli-cmd-link" data-cmd="/help">/help</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Mostra esta lista', 'help');
   adicionarLinhaOutput('', 'help');
   adicionarLinhaOutput('╚══════════════════════════════════════╝', 'info');
 }
