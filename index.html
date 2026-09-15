@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Aplicação interativa demonstrando conceitos de Interação Humano-Computador: CLI, Formulários e Manipulação Direta.">
+  <title>IHC — Interação Humano-Computador</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/tela1-cli.css">
+  <link rel="stylesheet" href="css/tela2-form.css">
+  <link rel="stylesheet" href="css/tela3-chat.css">
+  <link rel="stylesheet" href="css/tela4-dash.css">
+
+  <!-- Favicon inline -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>">
+</head>
+<body>
+
+  <!-- ============================================
+       TELA 1 — CLI Terminal (Paradigma CLI)
+       ============================================ -->
+  <section id="tela-1" class="tela active" aria-label="Terminal CLI">
+    <header class="cli-header">
+      <h1 class="cli-title" id="cli-title-text"></h1>
+      <p class="cli-subtitle">Digite /help para ver os comandos disponíveis</p>
+    </header>
+
+    <div class="cli-output" id="cli-output" role="log" aria-live="polite"></div>
+
+    <div class="cli-autocomplete-hint" id="cli-autocomplete" aria-hidden="true"></div>
+
+    <div class="cli-input-row">
+      <span class="cli-prompt-arrow" aria-hidden="true">&gt;</span>
+      <label for="cli-input" class="visually-hidden">Comando</label>
+      <input
+        type="text"
+        id="cli-input"
+        class="cli-input"
+        placeholder="digite um comando..."
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 2 — Confirmação de Dados (Formulários)
+       ============================================ -->
+  <section id="tela-2" class="tela" aria-label="Confirmação de Dados">
+    <!-- Decorative particles -->
+    <div class="form-particle" style="top:15%; left:10%; animation-delay:0s;"></div>
+    <div class="form-particle" style="top:70%; left:85%; animation-delay:2s;"></div>
+    <div class="form-particle" style="top:40%; left:70%; animation-delay:4s;"></div>
+    <div class="form-particle" style="top:80%; left:25%; animation-delay:1s;"></div>
+    <div class="form-particle" style="top:25%; left:60%; animation-delay:3s;"></div>
+
+    <div class="form-card-wrapper">
+      <div class="form-card" id="form-card">
+        <div class="form-header">
+          <h2>Confirme seus Dados</h2>
+          <p>Verifique as informações antes de continuar</p>
+        </div>
+
+        <form id="form-dados" novalidate>
+          <div class="form-field" id="field-nome">
+            <label for="form-nome">Nome</label>
+            <input type="text" id="form-nome" placeholder="Seu nome">
+            <div class="field-feedback" id="feedback-nome"></div>
+          </div>
+
+          <div class="form-field" id="field-curso">
+            <label for="form-curso">Curso</label>
+            <input type="text" id="form-curso" placeholder="Seu curso">
+            <div class="field-feedback" id="feedback-curso"></div>
+          </div>
+
+          <div class="form-field" id="field-idade">
+            <label for="form-idade">Idade</label>
+            <input type="number" id="form-idade" placeholder="Sua idade" min="16" max="55" inputmode="numeric">
+            <div class="field-feedback" id="feedback-idade"></div>
+          </div>
+
+          <button type="submit" class="form-submit-btn" id="form-submit-btn">
+            Confirmar e Continuar
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 3 — Chat Geral (Manipulação Direta)
+       ============================================ -->
+  <section id="tela-3" class="tela" aria-label="Chat Geral">
+    <header class="chat-header">
+      <div class="chat-avatar-group" aria-hidden="true">💬</div>
+      <div class="chat-header-info">
+        <div class="chat-header-title">Chat Geral — IHC</div>
+        <div class="chat-header-status" id="chat-status">Conectando...</div>
+      </div>
+      <div class="chat-header-actions">
+        <button class="chat-header-btn" id="btn-go-dash" aria-label="Ir para Dashboard" title="Dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="chat-messages" id="chat-messages" role="log" aria-live="polite"></div>
+
+    <div class="chat-input-bar">
+      <div class="chat-input-wrapper">
+        <label for="chat-input" class="visually-hidden">Mensagem</label>
+        <input
+          type="text"
+          id="chat-input"
+          class="chat-input"
+          placeholder="Digite uma mensagem..."
+          autocomplete="off"
+        >
+      </div>
+      <button class="chat-send-btn" id="chat-send-btn" aria-label="Enviar mensagem">
+        <svg viewBox="0 0 24 24">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================
+       TELA 4 — Gestor do Site (Dashboard)
+       ============================================ -->
+  <section id="tela-4" class="tela" aria-label="Dashboard">
+    <header class="dash-header">
+      <div style="display:flex; align-items:center; gap:var(--space-sm);">
+        <button class="dash-back-btn" id="btn-back-chat" aria-label="Voltar ao chat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <h2>Dashboard</h2>
+      </div>
+      <div class="dash-header-actions">
+        <button class="dash-header-btn" id="btn-refresh-dash" aria-label="Atualizar dados" title="Atualizar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="dash-tabs">
+      <button class="dash-tab active" data-tab="users" id="tab-users">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Usuários
+      </button>
+      <button class="dash-tab" data-tab="chat" id="tab-chat-mirror">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        Chat
+      </button>
+    </div>
+
+    <div class="dash-content" id="dash-content">
+      <!-- Users Panel -->
+      <div class="dash-users-panel" id="dash-users-panel">
+        <div class="dash-empty" id="dash-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+          </svg>
+          <p>Nenhum usuário cadastrado</p>
+        </div>
+      </div>
+
+      <!-- Chat Mirror Panel -->
+      <div class="dash-chat-panel hidden" id="dash-chat-panel">
+        <!-- Chat messages mirrored here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- App Scripts -->
+  <script src="js/app.js"></script>
+  <script src="js/tela1-cli.js"></script>
+  <script src="js/tela2-form.js"></script>
+  <script src="js/tela3-chat.js"></script>
+  <script src="js/tela4-dash.js"></script>
+</body>
+</html>

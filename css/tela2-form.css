@@ -1,0 +1,198 @@
+/* ===================================
+   TELA 2 — Formulário Glassmorphism
+   =================================== */
+
+#tela-2 {
+  background: var(--form-bg);
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  overflow-y: auto;
+}
+
+/* ── Animated Background ── */
+#tela-2::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(124, 77, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 230, 118, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(68, 138, 255, 0.1) 0%, transparent 50%);
+  z-index: 0;
+  animation: bgShift 8s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.05); }
+}
+
+/* ── Glassmorphism Card ── */
+.form-card-wrapper {
+  perspective: 800px;
+  width: 100%;
+  max-width: 400px;
+  z-index: 1;
+}
+
+.form-card {
+  background: var(--form-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--form-glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl) var(--space-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-purple);
+  transition: transform var(--transition-base) ease;
+  will-change: transform;
+  width: 100%;
+}
+
+/* ── Form Header ── */
+.form-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.form-header h2 {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff 0%, var(--form-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-xs);
+}
+
+.form-header p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Form Field Group ── */
+.form-field {
+  position: relative;
+  margin-bottom: var(--space-lg);
+}
+
+.form-field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: var(--space-xs);
+  transition: color var(--transition-fast);
+}
+
+.form-field input {
+  width: 100%;
+  padding: var(--space-md);
+  min-height: var(--touch-min);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-size: 1rem;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.form-field input:focus {
+  border-color: var(--form-accent);
+  box-shadow: 0 0 0 3px var(--form-accent-glow);
+}
+
+/* ── Validation States ── */
+.form-field.valid label {
+  color: var(--form-valid);
+}
+
+.form-field.valid input {
+  border-color: var(--form-valid);
+  box-shadow: 0 0 0 2px rgba(0, 230, 118, 0.15);
+}
+
+.form-field.invalid label {
+  color: var(--form-invalid);
+}
+
+.form-field.invalid input {
+  border-color: var(--form-invalid);
+  box-shadow: 0 0 0 2px rgba(255, 82, 82, 0.15);
+}
+
+.form-field .field-feedback {
+  font-size: 0.7rem;
+  margin-top: var(--space-xs);
+  height: 1rem;
+  transition: color var(--transition-fast);
+}
+
+.form-field.valid .field-feedback {
+  color: var(--form-valid);
+}
+
+.form-field.invalid .field-feedback {
+  color: var(--form-invalid);
+}
+
+/* ── Submit Button ── */
+.form-submit-btn {
+  width: 100%;
+  min-height: 52px;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, var(--form-accent) 0%, #651FFF 100%);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), opacity var(--transition-fast);
+  box-shadow: 0 4px 15px rgba(124, 77, 255, 0.3);
+  margin-top: var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.form-submit-btn:active {
+  transform: scale(0.97);
+}
+
+.form-submit-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.form-submit-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ── Floating Particles (decorative) ── */
+.form-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--form-accent);
+  opacity: 0.3;
+  animation: floatParticle 6s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes floatParticle {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50%      { transform: translateY(-30px) scale(1.5); opacity: 0.6; }
+}

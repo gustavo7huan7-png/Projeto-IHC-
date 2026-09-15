@@ -1,0 +1,201 @@
+/* ===================================
+   TELA 1 — CLI Terminal (MS-DOS Style)
+   =================================== */
+
+#tela-1 {
+  background: var(--cli-bg);
+  font-family: var(--font-mono);
+  color: var(--cli-green);
+}
+
+/* ── Header / Title ── */
+.cli-header {
+  padding: var(--space-md) var(--space-md) var(--space-sm);
+  border-bottom: 1px solid rgba(0, 255, 0, 0.15);
+  flex-shrink: 0;
+}
+
+.cli-title {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  min-height: 1.5em;
+}
+
+.cli-cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  background: var(--cli-green);
+  vertical-align: text-bottom;
+  animation: blink-cursor 1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+.cli-subtitle {
+  font-size: 0.7rem;
+  color: var(--cli-green-dim);
+  margin-top: var(--space-xs);
+  opacity: 0.7;
+}
+
+/* ── Output Area ── */
+.cli-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+.cli-output .line {
+  margin-bottom: var(--space-xs);
+  word-break: break-word;
+  animation: fadeIn 100ms ease;
+}
+
+.cli-output .line-cmd {
+  color: var(--cli-green);
+}
+
+.cli-output .line-response {
+  color: rgba(0, 255, 0, 0.75);
+  padding-left: var(--space-md);
+}
+
+.cli-output .line-error {
+  color: var(--cli-red);
+  font-weight: 700;
+}
+
+.cli-output .line-success {
+  color: var(--cli-green);
+  text-shadow: 0 0 6px rgba(0, 255, 0, 0.3);
+}
+
+.cli-output .line-info {
+  color: var(--cli-amber);
+}
+
+.cli-output .line-help {
+  color: rgba(0, 255, 0, 0.6);
+  padding-left: var(--space-sm);
+  font-size: 0.8rem;
+}
+
+/* ── Input Row ── */
+.cli-input-row {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  border-top: 1px solid rgba(0, 255, 0, 0.15);
+  background: rgba(0, 255, 0, 0.03);
+  flex-shrink: 0;
+  gap: var(--space-sm);
+}
+
+.cli-prompt-arrow {
+  color: var(--cli-green);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+  line-height: var(--touch-min);
+}
+
+.cli-input {
+  flex: 1;
+  background: transparent;
+  color: var(--cli-green);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  caret-color: var(--cli-green);
+  min-height: var(--touch-min);
+  padding: var(--space-sm) 0;
+}
+
+.cli-input::placeholder {
+  color: rgba(0, 255, 0, 0.25);
+}
+
+/* ── Autocomplete hint ── */
+.cli-autocomplete-hint {
+  position: absolute;
+  bottom: 60px;
+  left: var(--space-md);
+  right: var(--space-md);
+  background: rgba(0, 20, 0, 0.95);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 0.8rem;
+  color: var(--cli-green-dim);
+  display: none;
+  z-index: 10;
+}
+
+.cli-autocomplete-hint.visible {
+  display: block;
+  animation: fadeIn var(--transition-fast) ease;
+}
+
+/* ── Matrix Rain Canvas ── */
+.cli-matrix-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+
+/* ── Progress Bar (/apagarsite) ── */
+.cli-progress-container {
+  margin: var(--space-sm) 0;
+  background: rgba(0, 255, 0, 0.1);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  border-radius: 2px;
+  height: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cli-progress-bar {
+  height: 100%;
+  background: var(--cli-green);
+  width: 0%;
+  transition: width 50ms linear;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.cli-progress-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--cli-bg);
+  font-weight: 700;
+  mix-blend-mode: difference;
+}
+
+/* ── Scanline overlay for retro feel ── */
+#tela-1::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.08) 2px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}

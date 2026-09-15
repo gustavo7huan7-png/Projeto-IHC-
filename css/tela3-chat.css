@@ -1,0 +1,221 @@
+/* ===================================
+   TELA 3 — Chat (WhatsApp Style)
+   =================================== */
+
+#tela-3 {
+  background: var(--chat-bg);
+}
+
+/* ── Chat wallpaper pattern ── */
+#tela-3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image:
+    radial-gradient(circle at 20% 30%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, #fff 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, #fff 0.5px, transparent 0.5px);
+  background-size: 60px 60px, 80px 80px, 40px 40px;
+  z-index: 0;
+}
+
+/* ── Chat Header ── */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-md);
+  background: var(--chat-header);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  z-index: 2;
+  min-height: 56px;
+}
+
+.chat-avatar-group {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--chat-accent), #00796B);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.chat-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-header-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--chat-text);
+}
+
+.chat-header-status {
+  font-size: 0.75rem;
+  color: var(--chat-time);
+}
+
+.chat-header-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.chat-header-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.6);
+  transition: background var(--transition-fast);
+}
+
+.chat-header-btn:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Messages Container ── */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  z-index: 1;
+  overscroll-behavior: contain;
+}
+
+/* ── Message Bubbles ── */
+.chat-msg {
+  max-width: 82%;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--chat-text);
+  position: relative;
+  animation: msgIn 200ms ease;
+  word-wrap: break-word;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.chat-msg.self {
+  align-self: flex-end;
+  background: var(--chat-bubble-self);
+  border-bottom-right-radius: var(--space-xs);
+}
+
+.chat-msg.other {
+  align-self: flex-start;
+  background: var(--chat-bubble-other);
+  border-bottom-left-radius: var(--space-xs);
+}
+
+.chat-msg-sender {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--chat-accent);
+  margin-bottom: 2px;
+}
+
+.chat-msg-text {
+  margin-bottom: 2px;
+}
+
+.chat-msg-time {
+  font-size: 0.65rem;
+  color: var(--chat-time);
+  text-align: right;
+  margin-top: 2px;
+}
+
+/* ── System Messages ── */
+.chat-msg-system {
+  align-self: center;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--chat-time);
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  max-width: 90%;
+  text-align: center;
+}
+
+/* ── Input Bar ── */
+.chat-input-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--chat-header);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  z-index: 2;
+}
+
+.chat-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--chat-input-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs) var(--space-md);
+  min-height: var(--touch-min);
+}
+
+.chat-input {
+  flex: 1;
+  background: transparent;
+  color: var(--chat-text);
+  font-size: 0.95rem;
+  min-height: var(--touch-min);
+  padding: var(--space-sm) 0;
+  resize: none;
+}
+
+.chat-input::placeholder {
+  color: rgba(233, 237, 239, 0.3);
+}
+
+.chat-send-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--chat-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.chat-send-btn:active {
+  transform: scale(0.9);
+}
+
+.chat-send-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: #ffffff;
+  margin-left: 2px;
+}
+
+/* ── Navigation Button (go to Tela 4) ── */
+.chat-nav-dash {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 5;
+}
