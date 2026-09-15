@@ -17,15 +17,27 @@ let posicaoHistorico = -1;
 // ── Referências DOM ──
 let cliOutput, cliInput;
 
+// ── Detectar dispositivo touch ──
+const isTouchDevice = () =>
+  ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
 function initTela1() {
   cliOutput = document.getElementById('cli-output');
-  cliInput = document.getElementById('cli-input');
+  cliInput  = document.getElementById('cli-input');
 
   // Animação do título
   animarTitulo();
 
-  // Event listeners
+  // Event listeners do input
   cliInput.addEventListener('keydown', handleCliKeydown);
+
+  // ── Card de autocomplete clicável no mobile ──
+  const autocompleteEl = document.getElementById('cli-autocomplete');
+  autocompleteEl.addEventListener('click', () => {
+    autocompletar();
+    // Retorna o foco ao input após o toque (importante no mobile)
+    setTimeout(() => cliInput.focus(), 50);
+  });
 
   // Focar no input
   setTimeout(() => cliInput.focus(), 500);
@@ -135,7 +147,9 @@ function handleCliKeydown(e) {
     if (valor.startsWith('/') && valor.length > 1) {
       const matches = COMANDOS.filter(c => c.startsWith(valor.toLowerCase()));
       if (matches.length > 0 && matches[0] !== valor.toLowerCase()) {
-        autocomplete.textContent = `Tab → ${matches[0]}`;
+        // Label adaptado: "Toque" no mobile, "Tab" no desktop
+        const label = isTouchDevice() ? '👆 Toque' : 'Tab';
+        autocomplete.textContent = `${label} → ${matches[0]}`;
         autocomplete.classList.add('visible');
       } else {
         autocomplete.classList.remove('visible');

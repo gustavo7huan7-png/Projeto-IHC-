@@ -138,12 +138,23 @@
   color: var(--cli-green-dim);
   display: none;
   z-index: 10;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .cli-autocomplete-hint.visible {
   display: block;
   animation: fadeIn var(--transition-fast) ease;
 }
+
+/* Feedback visual ao tocar/clicar no card de autocomplete */
+.cli-autocomplete-hint:active {
+  background: rgba(0, 255, 0, 0.12);
+  border-color: rgba(0, 255, 0, 0.7);
+}
+
 
 /* ── Matrix Rain Canvas ── */
 .cli-matrix-canvas {
