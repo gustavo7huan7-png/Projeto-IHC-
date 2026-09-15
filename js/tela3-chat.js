@@ -26,11 +26,6 @@ function initTela3() {
       }
     });
 
-    // Botão ir para Dashboard
-    document.getElementById('btn-go-dash').addEventListener('click', () => {
-      navegarPara('tela-4');
-    });
-
     // ── Listeners do Socket.IO ──
     if (socket) {
       // Histórico ao conectar/reconectar
