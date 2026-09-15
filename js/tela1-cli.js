@@ -2,10 +2,6 @@
    TELA 1 — CLI Terminal Logic
    =================================== */
 
-// ── Nomes válidos ──
-const NOMES_VALIDOS = [
-  'gustavo', 'huan', 'wellyson', 'araujo', 'barros', 'isaac', 'barbosa', 'dutra', 'arthur', 'borges', 'sousa', 'ian', 'cesar', 'paulo', 'cesar', 'santos', 'silva', 'ana', 'cláudia', 'rafael', 'cleson', 'souza', 'de', 'oliveira', 'lidia', 'cruz', 'de', 'araújo', 'carlos', 'henrique', 'da', 'silva', 'sousa', 'arthur', 'de', 'pinho', 'costa', 'juan', 'douglas', 'mariana', 'ferreira', 'de', 'sousa', 'almeida', 'mateus', 'vinicius', 'francischini', 'cambiaghi', 'asaffe', 'gonçalves', 'albert', 'leite', 'resplandes', 'ketelly', 'lhais', 'lima', 'alves', 'davylla', 'lorrany', 'leonardo', 'martins', 'léo', 'franco', 'oliveira', 'joão', 'pedro', 'sanches', 'vieira', 'gerson', 'pereira', 'carneiro', 'kamilly', 'pereira', 'da', 'silva', 'rafael', 'quirino', 'paulo', 'ricardo', 'rodrigues', 'silva', 'adriel', 'sandes', 'carol', 'soares', 'hanry', 'sousa', 'de', 'carvalho', 'ian', 'vitor', 'do', 'vale', 'moreira', 'alexandre', 'william'
-];
 
 // ── Comandos disponíveis ──
 const COMANDOS = ['/help', '/setnome', '/setcurso', '/setidade', '/continuar', '/limpatela', '/telabin', '/apagarsite', '/gestorsite'];
@@ -254,21 +250,19 @@ function cmdHelp() {
 
 // ── /setnome ──
 function cmdSetNome(arg) {
-  if (!arg) {
-    adicionarLinhaOutput('ERRO: Uso correto: /setnome "Nome"', 'error');
+  if (!arg || arg.trim().length < 2) {
+    adicionarLinhaOutput('ERRO: Uso correto: /setnome "Nome" (mínimo 2 caracteres)', 'error');
+    return;
+  }
+  if (arg.trim().length > 60) {
+    adicionarLinhaOutput('ERRO: Nome muito longo. Máximo de 60 caracteres.', 'error');
     return;
   }
 
-  const nomeNorm = normalizar(arg);
-  const valido = NOMES_VALIDOS.includes(nomeNorm);
-
-  if (valido) {
-    // Salvar com formatação original (capitalizada)
-    estadoGlobal.nome = arg.charAt(0).toUpperCase() + arg.slice(1).toLowerCase();
-    adicionarLinhaOutput(`✓ Nome definido: ${estadoGlobal.nome}`, 'success');
-  } else {
-    adicionarLinhaOutput(`ERRO: Nome "${arg}" não é válido.`, 'error');
-  }
+  // Capitaliza a primeira letra, mantém o resto como digitado
+  const nome = arg.trim();
+  estadoGlobal.nome = nome.charAt(0).toUpperCase() + nome.slice(1);
+  adicionarLinhaOutput(`✓ Nome definido: ${estadoGlobal.nome}`, 'success');
 }
 
 // ── /setcurso ──
