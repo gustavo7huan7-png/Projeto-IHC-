@@ -19,7 +19,7 @@ const isTouchDevice = () =>
 
 function initTela1() {
   cliOutput = document.getElementById('cli-output');
-  cliInput  = document.getElementById('cli-input');
+  cliInput = document.getElementById('cli-input');
 
   // Animação do título
   animarTitulo();
@@ -449,7 +449,7 @@ function cmdTelaBin() {
     cancelAnimationFrame(animFrameId);
     canvas.remove();
     adicionarLinhaOutput('Matrix Rain finalizado.', 'success');
-  }, 5000);
+  }, 50000);
 }
 
 // ── /apagarsite — Progress bar ──

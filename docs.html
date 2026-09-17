@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Documentação técnica do Projeto IHC — Interação Humano-Computador">
+  <title>Documentação — Projeto IHC</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- html2pdf.js for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       DESIGN SYSTEM — Documentation Theme
+       ═══════════════════════════════════════════════ */
+
+    :root {
+      /* Colors */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #12121a;
+      --bg-card: #16161f;
+      --bg-code: #1a1a26;
+      --bg-sidebar: #0d0d14;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(124, 77, 255, 0.5);
+
+      --text-primary: #e8e8ef;
+      --text-secondary: #9898a8;
+      --text-muted: #5e5e72;
+
+      --accent: #7C4DFF;
+      --accent-hover: #9e7aff;
+      --accent-glow: rgba(124, 77, 255, 0.15);
+      --accent-glow-strong: rgba(124, 77, 255, 0.35);
+
+      --green: #00E676;
+      --green-bg: rgba(0, 230, 118, 0.08);
+      --green-border: rgba(0, 230, 118, 0.25);
+
+      --red: #FF5252;
+      --red-bg: rgba(255, 82, 82, 0.08);
+      --red-border: rgba(255, 82, 82, 0.25);
+
+      --amber: #FFB800;
+      --amber-bg: rgba(255, 184, 0, 0.08);
+      --amber-border: rgba(255, 184, 0, 0.25);
+
+      --blue: #448AFF;
+      --blue-bg: rgba(68, 138, 255, 0.08);
+      --blue-border: rgba(68, 138, 255, 0.25);
+
+      --cyan: #00BCD4;
+
+      /* Fonts */
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+      /* Spacing */
+      --sidebar-width: 280px;
+      --header-height: 64px;
+
+      /* Radius */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    /* ── Reset ── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header-height) + 24px);
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* ── Header ── */
+    .doc-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: var(--header-height);
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+
+    .doc-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .doc-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.5px;
+    }
+
+    .doc-header-logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .doc-header-badge {
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--accent-glow);
+      color: var(--accent);
+      padding: 3px 10px;
+      border-radius: 99px;
+      border: 1px solid rgba(124, 77, 255, 0.2);
+      letter-spacing: 0.5px;
+    }
+
+    .doc-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, var(--accent), #9e3bff);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--accent-glow-strong);
+    }
+
+    .btn-download:active {
+      transform: translateY(0);
+    }
+
+    .btn-download svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .btn-download.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    /* ── Mobile Menu Toggle ── */
+    .sidebar-toggle {
+      display: none;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .sidebar-toggle svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ── Layout ── */
+    .doc-layout {
+      display: flex;
+      margin-top: var(--header-height);
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    /* ── Sidebar ── */
+    .doc-sidebar {
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+
+    .doc-sidebar-group {
+      margin-bottom: 8px;
+    }
+
+    .doc-sidebar-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      padding: 12px 20px 6px;
+    }
+
+    .doc-sidebar-link {
+      display: block;
+      padding: 7px 20px 7px 28px;
+      font-size: 13.5px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border-left: 2px solid transparent;
+    }
+
+    .doc-sidebar-link:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .doc-sidebar-link.active {
+      color: var(--accent);
+      background: var(--accent-glow);
+      border-left-color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* ── Main Content ── */
+    .doc-main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      max-width: 900px;
+      padding: 40px 48px 80px;
+    }
+
+    /* ── Typography ── */
+    .doc-main h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .doc-main h2 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 56px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      scroll-margin-top: calc(var(--header-height) + 24px);
+    }
+
+    .doc-main h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .doc-main h4 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      color: var(--accent-hover);
+    }
+
+    .doc-main p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    .doc-main ul,
+    .doc-main ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+
+    .doc-main li {
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+    }
+
+    .doc-main li::marker {
+      color: var(--accent);
+    }
+
+    .doc-main strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .doc-main a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .doc-main a:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+
+    .doc-subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+
+    /* ── Code Blocks ── */
+    code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+    :not(pre)>code {
+      background: var(--bg-code);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: var(--accent-hover);
+      font-size: 12.5px;
+      border: 1px solid var(--border);
+    }
+
+    pre {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    pre code {
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .code-label {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: rgba(124, 77, 255, 0.15);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 0 var(--radius-md) 0 var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Tables ── */
+    .doc-table-wrapper {
+      overflow-x: auto;
+      margin-bottom: 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead {
+      background: var(--bg-code);
+    }
+
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ── Info Boxes / Callouts ── */
+    .callout {
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin-bottom: 20px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+
+    .callout-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .callout-info {
+      background: var(--blue-bg);
+      border: 1px solid var(--blue-border);
+    }
+
+    .callout-info .callout-icon {
+      color: var(--blue);
+    }
+
+    .callout-success {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+    }
+
+    .callout-success .callout-icon {
+      color: var(--green);
+    }
+
+    .callout-warning {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+    }
+
+    .callout-warning .callout-icon {
+      color: var(--amber);
+    }
+
+    .callout-danger {
+      background: var(--red-bg);
+      border: 1px solid var(--red-border);
+    }
+
+    .callout-danger .callout-icon {
+      color: var(--red);
+    }
+
+    /* ── Badge / Tag ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-get {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+
+    .badge-post {
+      background: var(--blue-bg);
+      color: var(--blue);
+      border: 1px solid var(--blue-border);
+    }
+
+    .badge-put {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+
+    .badge-delete {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid var(--red-border);
+    }
+
+    .badge-ws {
+      background: rgba(0, 188, 212, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 188, 212, 0.25);
+    }
+
+    /* ── API Endpoint Card ── */
+    .endpoint {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .endpoint-path {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .endpoint-desc {
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Architecture Diagram ── */
+    .arch-diagram {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      margin: 24px 0;
+      text-align: center;
+    }
+
+    .arch-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+
+    .arch-box {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .arch-box-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .arch-box-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .arch-box.accent {
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .arch-box.green {
+      border-color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .arch-box.blue {
+      border-color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .arch-box.amber {
+      border-color: var(--amber);
+      background: var(--amber-bg);
+    }
+
+    .arch-arrow {
+      font-size: 20px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 0;
+    }
+
+    /* ── File Tree ── */
+    .file-tree {
+      background: var(--bg-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+    }
+
+    .file-tree .dir {
+      color: var(--accent-hover);
+    }
+
+    .file-tree .file {
+      color: var(--text-secondary);
+    }
+
+    .file-tree .comment {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ── Stats Grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* ── Divider ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      text-align: center;
+      padding: 32px 0;
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .sidebar-toggle {
+        display: flex;
+      }
+
+      .doc-sidebar {
+        transform: translateX(-100%);
+      }
+
+      .doc-sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .doc-main {
+        margin-left: 0;
+        padding: 28px 20px 60px;
+      }
+
+      .doc-main h1 {
+        font-size: 28px;
+      }
+
+      .doc-main h2 {
+        font-size: 20px;
+      }
+
+      .arch-row {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .doc-header {
+        padding: 0 12px;
+      }
+
+      .doc-header-badge {
+        display: none;
+      }
+
+      .btn-download span {
+        display: none;
+      }
+
+      .btn-back span {
+        display: none;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* ── Print / PDF styles ── */
+    @media print {
+
+      .doc-header,
+      .doc-sidebar,
+      .sidebar-toggle,
+      .btn-download,
+      .btn-back {
+        display: none !important;
+      }
+
+      .doc-main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+
+      body {
+        background: #fff !important;
+        color: #1a1a1a !important;
+      }
+
+      .doc-main h1 {
+        background: none !important;
+        -webkit-text-fill-color: #1a1a1a !important;
+        color: #1a1a1a !important;
+      }
+
+      .doc-main h2,
+      .doc-main h3 {
+        color: #1a1a1a !important;
+      }
+
+      .doc-main p,
+      .doc-main li,
+      td {
+        color: #333 !important;
+      }
+
+      pre,
+      code,
+      .callout,
+      .endpoint,
+      .arch-diagram,
+      .file-tree,
+      .stat-card,
+      .doc-table-wrapper {
+        border-color: #ddd !important;
+        background: #f8f8f8 !important;
+      }
+
+      .doc-main h2 {
+        border-bottom-color: #ddd !important;
+      }
+    }
+
+    /* ── Smooth scroll indicator ── */
+    .doc-sidebar-link {
+      position: relative;
+    }
+
+    /* ── Section number ── */
+    .section-number {
+      color: var(--accent);
+      font-weight: 700;
+      margin-right: 6px;
+      font-size: 0.85em;
+    }
+
+    /* ── Version timeline ── */
+    .version-timeline {
+      border-left: 2px solid var(--border);
+      padding-left: 24px;
+      margin: 16px 0 20px 8px;
+    }
+
+    .version-item {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .version-item::before {
+      content: '';
+      position: absolute;
+      left: -29px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg-primary);
+    }
+
+    .version-tag {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .version-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+
+    .version-desc {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════
+       HEADER
+       ═══════════════════════════════════ -->
+  <header class="doc-header">
+    <div class="doc-header-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="doc-header-logo">
+        <div class="doc-header-logo-icon">📖</div>
+        <span>Projeto IHC</span>
+      </div>
+      <span class="doc-header-badge">v1.0.0</span>
+    </div>
+    <div class="doc-header-actions">
+      <a href="index.html" class="btn-back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        <span>Voltar ao App</span>
+      </a>
+      <button class="btn-download" onclick="exportarPDF()" id="btn-pdf">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Baixar PDF</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="doc-layout">
+    <!-- ═══════════════════════════════════
+         SIDEBAR — Navigation
+         ═══════════════════════════════════ -->
+    <nav class="doc-sidebar" id="doc-sidebar">
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Introdução</div>
+        <a href="#visao-geral" class="doc-sidebar-link active">Visão Geral</a>
+        <a href="#inicio-rapido" class="doc-sidebar-link">Início Rápido</a>
+        <a href="#stack-tecnologica" class="doc-sidebar-link">Stack Tecnológica</a>
+      </div>
+
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Arquitetura</div>
+        <a href="#arquitetura" class="doc-sidebar-link">Visão Arquitetural</a>
+        <a href="#estrutura-arquivos" class="doc-sidebar-link">Estrutura de Arquivos</a>
+        <a href="#fluxo-dados" class="doc-sidebar-link">Fluxo de Dados</a>
+      </div>
+
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Front-End</div>
+        <a href="#tela-cli" class="doc-sidebar-link">Tela 1 — CLI</a>
+        <a href="#tela-form" class="doc-sidebar-link">Tela 2 — Formulário</a>
+        <a href="#tela-chat" class="doc-sidebar-link">Tela 3 — Chat</a>
+        <a href="#tela-dash" class="doc-sidebar-link">Tela 4 — Dashboard</a>
+      </div>
+
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Back-End</div>
+        <a href="#servidor" class="doc-sidebar-link">Servidor Express</a>
+        <a href="#api-rest" class="doc-sidebar-link">API REST</a>
+        <a href="#websockets" class="doc-sidebar-link">WebSockets</a>
+      </div>
+
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Design System</div>
+        <a href="#design-tokens" class="doc-sidebar-link">Design Tokens</a>
+        <a href="#componentes-css" class="doc-sidebar-link">Componentes CSS</a>
+      </div>
+
+      <div class="doc-sidebar-group">
+        <div class="doc-sidebar-title">Operações</div>
+        <a href="#deploy" class="doc-sidebar-link">Deploy</a>
+        <a href="#changelog" class="doc-sidebar-link">Changelog</a>
+      </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════
+         MAIN CONTENT
+         ═══════════════════════════════════ -->
+    <main class="doc-main" id="doc-content">
+
+      <!-- ── 1. Visão Geral ── -->
+      <section id="visao-geral">
+        <h1>Documentação do Projeto IHC</h1>
+        <p class="doc-subtitle">Aplicação interativa demonstrando paradigmas de Interação Humano-Computador: CLI,
+          Formulários, Manipulação Direta e Dashboard em tempo real.</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Telas / Paradigmas</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Endpoints API</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Arquivos de Código</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">RT</div>
+            <div class="stat-label">Tempo Real (WS)</div>
+          </div>
+        </div>
+
+        <p>O <strong>Projeto IHC</strong> é uma Single Page Application (SPA) que exemplifica quatro paradigmas
+          distintos
+          de interação humano-computador dentro de um fluxo unificado. Cada tela apresenta um estilo de interação
+          diferente, conectados por um servidor Node.js/Express com comunicação em tempo real via Socket.IO.</p>
+
+        <div class="callout callout-info">
+          <span class="callout-icon">💡</span>
+          <div>Este projeto foi desenvolvido como demonstração acadêmica para a disciplina de <strong>Interação
+              Humano-Computador</strong>, explorando conceitos de usabilidade, acessibilidade e paradigmas de
+            interface.</div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 2. Início Rápido ── -->
+      <section id="inicio-rapido">
+        <h2><span class="section-number">01</span> Início Rápido</h2>
+
+        <h3>Pré-requisitos</h3>
+        <ul>
+          <li><strong>Node.js</strong> ≥ 20.x</li>
+          <li><strong>npm</strong> ≥ 10.x (incluso no Node.js)</li>
+        </ul>
+
+        <h3>Instalação</h3>
+        <pre><code><span style="color: var(--text-muted);"># Clonar o repositório</span>
+git clone https://github.com/gustavo7huan7-png/Projeto-IHC-.git
+cd Projeto-IHC-
+
+<span style="color: var(--text-muted);"># Instalar dependências</span>
+npm install
+
+<span style="color: var(--text-muted);"># Iniciar o servidor (produção)</span>
+npm start
+
+<span style="color: var(--text-muted);"># Iniciar com hot-reload (desenvolvimento)</span>
+npm run dev</code><span class="code-label">Terminal</span></pre>
+
+        <h3>Acessar a Aplicação</h3>
+        <p>Após iniciar o servidor, acesse <code>http://localhost:3000</code> no navegador.</p>
+
+        <div class="callout callout-success">
+          <span class="callout-icon">✅</span>
+          <div>O servidor exibirá no terminal a URL de acesso e confirmação de que o Socket.IO está ativo.</div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 3. Stack Tecnológica ── -->
+      <section id="stack-tecnologica">
+        <h2><span class="section-number">02</span> Stack Tecnológica</h2>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Camada</th>
+                <th>Tecnologia</th>
+                <th>Versão</th>
+                <th>Propósito</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Runtime</strong></td>
+                <td>Node.js</td>
+                <td>≥ 20.x</td>
+                <td>Ambiente de execução do servidor</td>
+              </tr>
+              <tr>
+                <td><strong>Framework</strong></td>
+                <td>Express.js</td>
+                <td>^4.19.2</td>
+                <td>Servidor HTTP e roteamento REST</td>
+              </tr>
+              <tr>
+                <td><strong>WebSocket</strong></td>
+                <td>Socket.IO</td>
+                <td>^4.7.5</td>
+                <td>Comunicação bidirecional em tempo real</td>
+              </tr>
+              <tr>
+                <td><strong>CORS</strong></td>
+                <td>cors</td>
+                <td>^2.8.5</td>
+                <td>Middleware de Cross-Origin Resource Sharing</td>
+              </tr>
+              <tr>
+                <td><strong>Front-End</strong></td>
+                <td>HTML5 / CSS3 / JS</td>
+                <td>Vanilla</td>
+                <td>Interface SPA sem frameworks front-end</td>
+              </tr>
+              <tr>
+                <td><strong>Tipografia</strong></td>
+                <td>Google Fonts</td>
+                <td>—</td>
+                <td>Inter (sans) + Share Tech Mono (mono)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 4. Arquitetura ── -->
+      <section id="arquitetura">
+        <h2><span class="section-number">03</span> Visão Arquitetural</h2>
+
+        <p>A aplicação segue uma arquitetura <strong>cliente-servidor</strong> com SPA no front-end, API REST para
+          operações CRUD e WebSockets (Socket.IO) para comunicação em tempo real.</p>
+
+        <div class="arch-diagram">
+          <div
+            style="font-size:12px; color:var(--text-muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">
+            Diagrama de Arquitetura</div>
+
+          <div class="arch-row">
+            <div class="arch-box accent">
+              <div class="arch-box-title">🖥️ Browser (SPA)</div>
+              <div class="arch-box-sub">index.html + JS Modules</div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">↕ HTTP / WebSocket</div>
+
+          <div class="arch-row">
+            <div class="arch-box green">
+              <div class="arch-box-title">🚀 Express.js</div>
+              <div class="arch-box-sub">Servidor HTTP + Static</div>
+            </div>
+            <div class="arch-box blue">
+              <div class="arch-box-title">🔌 Socket.IO</div>
+              <div class="arch-box-sub">Eventos em Tempo Real</div>
+            </div>
+          </div>
+
+          <div class="arch-arrow">↕ In-Memory</div>
+
+          <div class="arch-row">
+            <div class="arch-box amber">
+              <div class="arch-box-title">💾 Armazenamento</div>
+              <div class="arch-box-sub">Arrays em memória (RAM)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <span class="callout-icon">⚠️</span>
+          <div><strong>Armazenamento volátil:</strong> Os dados são armazenados em memória (arrays JavaScript). Ao
+            reiniciar o servidor, todos os dados de usuários e mensagens são perdidos. Isso é intencional para um
+            projeto
+            demonstrativo.</div>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 5. Estrutura de Arquivos ── -->
+      <section id="estrutura-arquivos">
+        <h2><span class="section-number">04</span> Estrutura de Arquivos</h2>
+
+        <div class="file-tree">
+          <span class="dir">Projeto-IHC/</span><br>
+          ├── <span class="file">index.html</span> <span class="comment">← SPA principal (4 telas/sections)</span><br>
+          ├── <span class="file">server.js</span> <span class="comment">← Servidor Express + Socket.IO</span><br>
+          ├── <span class="file">package.json</span> <span class="comment">← Dependências e scripts npm</span><br>
+          ├── <span class="file">docs.html</span> <span class="comment">← Esta documentação</span><br>
+          ├── <span class="file">.gitignore</span><br>
+          ├── <span class="dir">css/</span><br>
+          │ ├── <span class="file">reset.css</span> <span class="comment">← Normalização base</span><br>
+          │ ├── <span class="file">global.css</span> <span class="comment">← Design tokens + utilitários</span><br>
+          │ ├── <span class="file">tela1-cli.css</span> <span class="comment">← Estilos do terminal CLI</span><br>
+          │ ├── <span class="file">tela2-form.css</span> <span class="comment">← Estilos do formulário</span><br>
+          │ ├── <span class="file">tela3-chat.css</span> <span class="comment">← Estilos do chat</span><br>
+          │ └── <span class="file">tela4-dash.css</span> <span class="comment">← Estilos do dashboard</span><br>
+          └── <span class="dir">js/</span><br>
+          &nbsp; ├── <span class="file">app.js</span> <span class="comment">← Estado global, navegação SPA,
+            Socket.IO</span><br>
+          &nbsp; ├── <span class="file">tela1-cli.js</span> <span class="comment">← Lógica CLI (comandos,
+            autocomplete)</span><br>
+          &nbsp; ├── <span class="file">tela2-form.js</span> <span class="comment">← Validação de formulário</span><br>
+          &nbsp; ├── <span class="file">tela3-chat.js</span> <span class="comment">← Chat real-time</span><br>
+          &nbsp; └── <span class="file">tela4-dash.js</span> <span class="comment">← Dashboard de administração</span>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 6. Fluxo de Dados ── -->
+      <section id="fluxo-dados">
+        <h2><span class="section-number">05</span> Fluxo de Dados</h2>
+
+        <p>O fluxo do usuário é sequencial, passando por cada paradigma de interação:</p>
+
+        <div class="arch-diagram">
+          <div
+            style="font-size:12px; color:var(--text-muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:1px; font-weight:600;">
+            Fluxo do Usuário</div>
+
+          <div class="arch-row">
+            <div class="arch-box accent">
+              <div class="arch-box-title">Tela 1 — CLI</div>
+              <div class="arch-box-sub">/setnome, /setcurso, /setidade</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box green">
+              <div class="arch-box-title">Tela 2 — Form</div>
+              <div class="arch-box-sub">Confirmar / Editar dados</div>
+            </div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box blue">
+              <div class="arch-box-title">Tela 3 — Chat</div>
+              <div class="arch-box-sub">Mensagens em tempo real</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <div class="arch-box amber" style="display: inline-block;">
+              <div class="arch-box-title">Tela 4 — Dashboard</div>
+              <div class="arch-box-sub">Acessível via /gestorsite</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Estado Global (<code>estadoGlobal</code>)</h3>
+        <p>Um objeto JavaScript compartilhado entre todos os módulos armazena o estado do usuário atual:</p>
+        <pre><code>const estadoGlobal = {
+  nome: null,      <span style="color: var(--text-muted);">// String — definido via /setnome</span>
+  curso: null,     <span style="color: var(--text-muted);">// String — definido via /setcurso</span>
+  idade: null,     <span style="color: var(--text-muted);">// Number — definido via /setidade</span>
+  id: null,        <span style="color: var(--text-muted);">// String — gerado pelo servidor ou local</span>
+  telaAtual: 'tela-1'
+};</code><span class="code-label">JavaScript</span></pre>
+
+        <h3>Persistência de Sessão</h3>
+        <p>O estado é persistido via <code>localStorage</code> para sobreviver a recarregamentos da página. As funções
+          responsáveis são:</p>
+        <ul>
+          <li><code>salvarSessao()</code> — Serializa o estado para <code>localStorage</code></li>
+          <li><code>carregarSessao()</code> — Restaura o estado ao carregar a página</li>
+          <li><code>limparSessao()</code> — Remove os dados salvos (logout ou exclusão)</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ── 7. Tela 1 — CLI ── -->
+      <section id="tela-cli">
+        <h2><span class="section-number">06</span> Tela 1 — Terminal CLI</h2>
+
+        <p>Paradigma de <strong>Interface de Linha de Comando</strong>. O usuário interage digitando comandos textuais
+          para definir seus dados (nome, curso, idade).</p>
+
+        <h3>Comandos Disponíveis</h3>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Comando</th>
+                <th>Argumento</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>/help</code></td>
+                <td>—</td>
+                <td>Exibe a lista de comandos disponíveis</td>
+              </tr>
+              <tr>
+                <td><code>/setnome</code></td>
+                <td><code>"Nome"</code></td>
+                <td>Define o nome do usuário (2–60 chars)</td>
+              </tr>
+              <tr>
+                <td><code>/setcurso</code></td>
+                <td><code>"Curso"</code></td>
+                <td>Define o curso do usuário</td>
+              </tr>
+              <tr>
+                <td><code>/setidade</code></td>
+                <td><code>"Idade"</code></td>
+                <td>Define a idade (16–55)</td>
+              </tr>
+              <tr>
+                <td><code>/continuar</code></td>
+                <td>—</td>
+                <td>Valida dados e avança para Tela 2</td>
+              </tr>
+              <tr>
+                <td><code>/limpatela</code></td>
+                <td>—</td>
+                <td>Limpa o terminal</td>
+              </tr>
+              <tr>
+                <td><code>/telabin</code></td>
+                <td>—</td>
+                <td>Easter egg — efeito Matrix Rain (5s)</td>
+              </tr>
+              <tr>
+                <td><code>/apagarsite</code></td>
+                <td>—</td>
+                <td>Easter egg — progress bar + "acesso negado"</td>
+              </tr>
+              <tr>
+                <td><code>/gestorsite</code></td>
+                <td>—</td>
+                <td>Acesso direto ao Dashboard (Tela 4)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Funcionalidades Técnicas</h3>
+        <ul>
+          <li><strong>Autocomplete</strong> — Sugestão em tempo real ao digitar <code>/</code>, ativável por Tab ou
+            clique</li>
+          <li><strong>Histórico</strong> — Navegação por comandos anteriores com setas ↑ / ↓</li>
+          <li><strong>Parser de comandos</strong> — Suporta argumentos com e sem aspas</li>
+          <li><strong>Animação de título</strong> — Efeito "typewriter" letra por letra ao carregar</li>
+          <li><strong>Comandos clicáveis</strong> — Links no output que preenchem o input ao clicar</li>
+          <li><strong>Responsividade touch</strong> — Compatível com teclados virtuais (Gboard, iOS)</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ── 8. Tela 2 — Formulário ── -->
+      <section id="tela-form">
+        <h2><span class="section-number">07</span> Tela 2 — Formulário de Confirmação</h2>
+
+        <p>Paradigma de <strong>Formulários</strong>. Os dados inseridos via CLI são pré-preenchidos e o usuário pode
+          editar antes de confirmar.</p>
+
+        <h3>Campos e Validação</h3>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Campo</th>
+                <th>Tipo</th>
+                <th>Regras</th>
+                <th>Feedback Visual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>nome</code></td>
+                <td>text</td>
+                <td>2–60 caracteres</td>
+                <td>✓ Nome válido / ✗ Inválido</td>
+              </tr>
+              <tr>
+                <td><code>curso</code></td>
+                <td>text</td>
+                <td>2–80 caracteres</td>
+                <td>✓ Curso válido / ✗ Inválido</td>
+              </tr>
+              <tr>
+                <td><code>idade</code></td>
+                <td>number</td>
+                <td>Inteiro entre 16–55</td>
+                <td>✓ Idade válida / ✗ Inválida</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Comportamento</h3>
+        <ul>
+          <li><strong>Validação em tempo real</strong> — Cada campo valida a cada keystroke (<code>input</code> event)
+          </li>
+          <li><strong>Feedback visual</strong> — Classes CSS <code>.valid</code> / <code>.invalid</code> no wrapper do
+            campo</li>
+          <li><strong>Shake animation</strong> — Ao tentar submeter com dados inválidos, o card treme</li>
+          <li><strong>Foco inteligente</strong> — Ao entrar, foca no primeiro campo vazio ou no botão de confirmar</li>
+          <li><strong>PUT /api/usuarios/:id</strong> — Envia os dados editados ao servidor</li>
+        </ul>
+
+        <h3>Design</h3>
+        <p>Utiliza <strong>glassmorphism</strong> com partículas decorativas flutuantes, card centralizado com bordas
+          semi-transparentes e efeito de blur no background.</p>
+      </section>
+
+      <hr>
+
+      <!-- ── 9. Tela 3 — Chat ── -->
+      <section id="tela-chat">
+        <h2><span class="section-number">08</span> Tela 3 — Chat em Tempo Real</h2>
+
+        <p>Paradigma de <strong>Manipulação Direta</strong>. Chat bidirecional em tempo real via Socket.IO, com visual
+          inspirado no WhatsApp.</p>
+
+        <h3>Funcionalidades</h3>
+        <ul>
+          <li><strong>Mensagens em tempo real</strong> — Enviadas e recebidas via WebSocket</li>
+          <li><strong>Optimistic UI</strong> — Mensagem aparece instantaneamente antes da confirmação do servidor</li>
+          <li><strong>Histórico</strong> — Ao conectar, o servidor envia as últimas mensagens</li>
+          <li><strong>Reconexão automática</strong> — Socket.IO gerencia reconexões transparentemente</li>
+          <li><strong>Indicador de status</strong> — "Online", "Reconectando...", "Sem conexão"</li>
+          <li><strong>Bloqueio de usuário</strong> — Se banido pelo Dashboard, o input é desabilitado</li>
+          <li><strong>Modo offline</strong> — Informa que a mensagem não foi enviada</li>
+        </ul>
+
+        <h3>Eventos Socket.IO (Cliente)</h3>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Direção</th>
+                <th>Payload</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>chatMessage</code></td>
+                <td>↑ emit</td>
+                <td><code>{ id, nome, texto, hora }</code></td>
+              </tr>
+              <tr>
+                <td><code>chatMessage</code></td>
+                <td>↓ on</td>
+                <td><code>{ id, nome, texto, hora }</code></td>
+              </tr>
+              <tr>
+                <td><code>historicoMensagens</code></td>
+                <td>↓ on</td>
+                <td><code>Array&lt;mensagem&gt;</code></td>
+              </tr>
+              <tr>
+                <td><code>pedirHistorico</code></td>
+                <td>↑ emit</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><code>usuarioAtualizado</code></td>
+                <td>↓ on</td>
+                <td><code>{ id, status, ... }</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 10. Tela 4 — Dashboard ── -->
+      <section id="tela-dash">
+        <h2><span class="section-number">09</span> Tela 4 — Dashboard Administrativo</h2>
+
+        <p>Painel de administração do site. Permite gerenciar usuários cadastrados e espelhar mensagens do chat.</p>
+
+        <h3>Aba "Usuários"</h3>
+        <ul>
+          <li><strong>Listagem de cards</strong> — Cada usuário é exibido em um card com nome, curso, idade, ID e status
+          </li>
+          <li><strong>Excluir usuário</strong> — Remove o usuário via <code>DELETE /api/usuarios/:id</code> + Socket.IO
+          </li>
+          <li><strong>Bloquear/Desbloquear</strong> — Alterna o status via <code>PUT /api/usuarios/:id/status</code>
+          </li>
+          <li><strong>Animação de entrada</strong> — Cards aparecem com delay escalonado</li>
+          <li><strong>Atualização reativa</strong> — Escuta eventos Socket.IO para atualizar em tempo real</li>
+        </ul>
+
+        <h3>Aba "Chat"</h3>
+        <ul>
+          <li><strong>Espelho do chat</strong> — Exibe mensagens do chat em formato simplificado para monitoramento</li>
+          <li><strong>Auto-scroll</strong> — Rola automaticamente ao receber novas mensagens</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ── 11. Servidor Express ── -->
+      <section id="servidor">
+        <h2><span class="section-number">10</span> Servidor Express</h2>
+
+        <h3>Configuração</h3>
+        <pre><code><span style="color: var(--text-muted);">// Middlewares</span>
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname), {
+  setHeaders: (res, filePath) => {
+    <span style="color: var(--text-muted);">// Cache-busting para desenvolvimento</span>
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));</code><span class="code-label">server.js</span></pre>
+
+        <h3>Armazenamento em Memória</h3>
+        <p>O servidor mantém dois arrays em memória:</p>
+        <ul>
+          <li><code>usuarios[]</code> — Lista de usuários cadastrados</li>
+          <li><code>mensagens[]</code> — Histórico do chat (máximo 150 mensagens)</li>
+        </ul>
+
+        <h3>Variáveis de Ambiente</h3>
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Variável</th>
+                <th>Default</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>PORT</code></td>
+                <td><code>3000</code></td>
+                <td>Porta em que o servidor escuta</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 12. API REST ── -->
+      <section id="api-rest">
+        <h2><span class="section-number">11</span> API REST — Referência</h2>
+
+        <p>Todos os endpoints retornam JSON. A base URL é <code>http://localhost:3000</code>.</p>
+
+        <!-- GET /api/usuarios -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-get">GET</span>
+            <span class="endpoint-path">/api/usuarios</span>
+          </div>
+          <div class="endpoint-desc">Retorna a lista completa de usuários cadastrados.</div>
+          <h4>Resposta — <code>200 OK</code></h4>
+          <pre><code>[
+  {
+    "id": "usr_m3x7abc",
+    "nome": "Maria",
+    "curso": "Ciência da Computação",
+    "idade": 22,
+    "status": "online",
+    "createdAt": "2026-09-17T18:00:00.000Z"
+  }
+]</code><span class="code-label">JSON</span></pre>
+        </div>
+
+        <!-- POST /api/usuarios -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-post">POST</span>
+            <span class="endpoint-path">/api/usuarios</span>
+          </div>
+          <div class="endpoint-desc">Cadastra um novo usuário. Emite evento <code>usuarioCadastrado</code> via
+            Socket.IO.</div>
+          <h4>Body</h4>
+          <pre><code>{
+  "nome": "João",        <span style="color: var(--text-muted);">// obrigatório</span>
+  "curso": "Engenharia", <span style="color: var(--text-muted);">// opcional (default: "Não informado")</span>
+  "idade": 25            <span style="color: var(--text-muted);">// opcional</span>
+}</code><span class="code-label">JSON</span></pre>
+          <h4>Resposta — <code>201 Created</code></h4>
+          <pre><code>{
+  "id": "usr_m3x8def",
+  "nome": "João",
+  "curso": "Engenharia",
+  "idade": 25,
+  "status": "online",
+  "createdAt": "2026-09-17T18:05:00.000Z"
+}</code><span class="code-label">JSON</span></pre>
+          <h4>Erro — <code>400 Bad Request</code></h4>
+          <pre><code>{ "error": "Nome é obrigatório" }</code><span class="code-label">JSON</span></pre>
+        </div>
+
+        <!-- PUT /api/usuarios/:id -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-put">PUT</span>
+            <span class="endpoint-path">/api/usuarios/:id</span>
+          </div>
+          <div class="endpoint-desc">Atualiza os dados de um usuário existente. Se o ID não existir, cria um novo
+            registro (upsert). Emite <code>usuarioAtualizado</code>.</div>
+          <h4>Body</h4>
+          <pre><code>{
+  "nome": "João Silva",
+  "curso": "Engenharia de Software",
+  "idade": 26
+}</code><span class="code-label">JSON</span></pre>
+        </div>
+
+        <!-- DELETE /api/usuarios/:id -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-delete">DELETE</span>
+            <span class="endpoint-path">/api/usuarios/:id</span>
+          </div>
+          <div class="endpoint-desc">Remove um usuário. Emite <code>usuarioDeletado</code> via Socket.IO para todos os
+            clientes.</div>
+          <h4>Resposta — <code>200 OK</code></h4>
+          <pre><code>{ "ok": true, "id": "usr_m3x8def" }</code><span class="code-label">JSON</span></pre>
+        </div>
+
+        <!-- PUT /api/usuarios/:id/status -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-put">PUT</span>
+            <span class="endpoint-path">/api/usuarios/:id/status</span>
+          </div>
+          <div class="endpoint-desc">Alterna o status de bloqueio de um usuário (bloquear / desbloquear).</div>
+          <h4>Body</h4>
+          <pre><code>{ "isBanned": true }</code><span class="code-label">JSON</span></pre>
+          <h4>Erro — <code>404 Not Found</code></h4>
+          <pre><code>{ "error": "Usuário não encontrado" }</code><span class="code-label">JSON</span></pre>
+        </div>
+
+        <!-- GET /api/mensagens -->
+        <div class="endpoint">
+          <div class="endpoint-header">
+            <span class="badge badge-get">GET</span>
+            <span class="endpoint-path">/api/mensagens</span>
+          </div>
+          <div class="endpoint-desc">Retorna o histórico de mensagens do chat (máximo 150).</div>
+          <h4>Resposta — <code>200 OK</code></h4>
+          <pre><code>[
+  {
+    "id": "usr_m3x7abc",
+    "nome": "Maria",
+    "texto": "Olá pessoal!",
+    "hora": "18:05"
+  }
+]</code><span class="code-label">JSON</span></pre>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 13. WebSockets ── -->
+      <section id="websockets">
+        <h2><span class="section-number">12</span> WebSockets — Eventos Socket.IO</h2>
+
+        <p>A comunicação bidirecional em tempo real é gerenciada pelo Socket.IO. Abaixo, todos os eventos do servidor:
+        </p>
+
+        <h3>Eventos Emitidos pelo Servidor</h3>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Destino</th>
+                <th>Payload</th>
+                <th>Quando</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-ws">WS</span> <code>historicoMensagens</code></td>
+                <td>socket</td>
+                <td><code>mensagem[]</code></td>
+                <td>Ao conectar ou pedir histórico</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-ws">WS</span> <code>chatMessage</code></td>
+                <td>broadcast</td>
+                <td><code>{ id, nome, texto, hora }</code></td>
+                <td>Nova mensagem de chat</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-ws">WS</span> <code>usuarioCadastrado</code></td>
+                <td>io (todos)</td>
+                <td><code>usuario</code></td>
+                <td>POST /api/usuarios</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-ws">WS</span> <code>usuarioAtualizado</code></td>
+                <td>io (todos)</td>
+                <td><code>usuario</code></td>
+                <td>PUT em dados ou status</td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-ws">WS</span> <code>usuarioDeletado</code></td>
+                <td>io (todos)</td>
+                <td><code>{ id }</code></td>
+                <td>DELETE de usuário</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Eventos Recebidos pelo Servidor</h3>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Payload</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>chatMessage</code></td>
+                <td><code>{ id, nome, texto, hora }</code></td>
+                <td>Armazena e retransmite para outros</td>
+              </tr>
+              <tr>
+                <td><code>deletarUsuario</code></td>
+                <td><code>{ id }</code></td>
+                <td>Remove e emite <code>usuarioDeletado</code></td>
+              </tr>
+              <tr>
+                <td><code>atualizarUsuario</code></td>
+                <td><code>{ id, isBanned }</code></td>
+                <td>Altera status e emite <code>usuarioAtualizado</code></td>
+              </tr>
+              <tr>
+                <td><code>pedirHistorico</code></td>
+                <td>—</td>
+                <td>Envia <code>historicoMensagens</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 14. Design Tokens ── -->
+      <section id="design-tokens">
+        <h2><span class="section-number">13</span> Design Tokens</h2>
+
+        <p>O projeto utiliza um design system baseado em <strong>CSS Custom Properties</strong>, definido em
+          <code>global.css</code>. Os tokens garantem consistência visual entre todas as telas.
+        </p>
+
+        <h3>Paleta de Cores</h3>
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Valor</th>
+                <th>Uso</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--cli-bg</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#000;border-radius:2px;margin-right:6px;vertical-align:middle;border:1px solid rgba(255,255,255,0.2);"></span>
+                  <code>#000000</code>
+                </td>
+                <td>Fundo do terminal CLI</td>
+              </tr>
+              <tr>
+                <td><code>--cli-green</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#00FF00;border-radius:2px;margin-right:6px;vertical-align:middle;"></span>
+                  <code>#00FF00</code>
+                </td>
+                <td>Texto principal do CLI</td>
+              </tr>
+              <tr>
+                <td><code>--form-bg</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#0f0f1a;border-radius:2px;margin-right:6px;vertical-align:middle;border:1px solid rgba(255,255,255,0.2);"></span>
+                  <code>#0f0f1a</code>
+                </td>
+                <td>Fundo do formulário</td>
+              </tr>
+              <tr>
+                <td><code>--form-accent</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#7C4DFF;border-radius:2px;margin-right:6px;vertical-align:middle;"></span>
+                  <code>#7C4DFF</code>
+                </td>
+                <td>Cor principal do formulário</td>
+              </tr>
+              <tr>
+                <td><code>--chat-accent</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#00A884;border-radius:2px;margin-right:6px;vertical-align:middle;"></span>
+                  <code>#00A884</code>
+                </td>
+                <td>Cor de destaque do chat</td>
+              </tr>
+              <tr>
+                <td><code>--chat-bubble-self</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#005C4B;border-radius:2px;margin-right:6px;vertical-align:middle;"></span>
+                  <code>#005C4B</code>
+                </td>
+                <td>Bolha de mensagem própria</td>
+              </tr>
+              <tr>
+                <td><code>--dash-danger</code></td>
+                <td><span
+                    style="display:inline-block;width:12px;height:12px;background:#FF5252;border-radius:2px;margin-right:6px;vertical-align:middle;"></span>
+                  <code>#FF5252</code>
+                </td>
+                <td>Ações destrutivas no dashboard</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Tipografia</h3>
+        <ul>
+          <li><strong>Sans-serif:</strong> <code>'Inter'</code> — Usado em formulários, chat e dashboard</li>
+          <li><strong>Monospace:</strong> <code>'Share Tech Mono'</code> — Usado exclusivamente no terminal CLI</li>
+        </ul>
+
+        <h3>Espaçamento</h3>
+        <p>Escala de <code>4px</code> consistente: <code>--space-xs</code> (4px), <code>--space-sm</code> (8px),
+          <code>--space-md</code> (16px), <code>--space-lg</code> (24px), <code>--space-xl</code> (32px),
+          <code>--space-2xl</code> (48px).
+        </p>
+
+        <h3>Acessibilidade</h3>
+        <ul>
+          <li><strong>Touch targets:</strong> Mínimo de <code>44px</code> (<code>--touch-min</code>) para botões e
+            inputs</li>
+          <li><strong>Focus visible:</strong> Outline de <code>2px solid var(--form-accent)</code></li>
+          <li><strong>Labels visualmente ocultos:</strong> Classe <code>.visually-hidden</code> para screen readers</li>
+          <li><strong>Roles ARIA:</strong> <code>role="log"</code> e <code>aria-live="polite"</code> no terminal e chat
+          </li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ── 15. Componentes CSS ── -->
+      <section id="componentes-css">
+        <h2><span class="section-number">14</span> Componentes CSS</h2>
+
+        <p>Cada tela possui seu próprio arquivo CSS, seguindo a convenção <code>tela{N}-{nome}.css</code>:</p>
+
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Arquivo</th>
+                <th>Componentes Principais</th>
+                <th>Tamanho</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>reset.css</code></td>
+                <td>Box-sizing, scrollbar, normalização</td>
+                <td>1.1 KB</td>
+              </tr>
+              <tr>
+                <td><code>global.css</code></td>
+                <td>Tokens, animações, classes utilitárias</td>
+                <td>3.7 KB</td>
+              </tr>
+              <tr>
+                <td><code>tela1-cli.css</code></td>
+                <td>Terminal, prompt, autocomplete, progress bar, matrix canvas</td>
+                <td>5.3 KB</td>
+              </tr>
+              <tr>
+                <td><code>tela2-form.css</code></td>
+                <td>Card glassmorphism, campos, partículas, botão submit</td>
+                <td>4.8 KB</td>
+              </tr>
+              <tr>
+                <td><code>tela3-chat.css</code></td>
+                <td>Bolhas de mensagem, header, input bar, sistema de msgs</td>
+                <td>4.5 KB</td>
+              </tr>
+              <tr>
+                <td><code>tela4-dash.css</code></td>
+                <td>Cards de usuário, tabs, badges de status, espelho do chat</td>
+                <td>6.2 KB</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Animações</h3>
+        <ul>
+          <li><code>fadeIn</code> — Entrada suave com deslocamento vertical</li>
+          <li><code>slideUp</code> — Slide vertical com fade</li>
+          <li><code>pulse</code> — Pulsação de opacidade (cursor, indicadores)</li>
+          <li><code>shimmer</code> — Efeito de brilho horizontal (loading states)</li>
+        </ul>
+      </section>
+
+      <hr>
+
+      <!-- ── 16. Deploy ── -->
+      <section id="deploy">
+        <h2><span class="section-number">15</span> Deploy</h2>
+
+        <h3>Railway</h3>
+        <p>O projeto está hospedado na <a href="https://railway.app" target="_blank" rel="noopener">Railway</a>:</p>
+        <ol>
+          <li>Utilizando o repositório GitHub para Railway</li>
+          <li>A Railway detecta automaticamente o <code>package.json</code></li>
+          <li>O comando de start (<code>npm start</code>) é executado automaticamente</li>
+          <li>A variável <code>PORT</code> é injetada pela Railway</li>
+        </ol>
+
+        <div class="callout callout-info">
+          <span class="callout-icon">ℹ️</span>
+          <div>Os arquivos CSS e JS utilizam cache-busting (<code>?v=1.2</code>) e headers <code>no-cache</code> para
+            garantir que atualizações sejam refletidas imediatamente após deploy.</div>
+        </div>
+
+        <h3>Docker (Alternativa)</h3>
+        <pre><code>FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
+EXPOSE 3000
+CMD ["node", "server.js"]</code><span class="code-label">Dockerfile</span></pre>
+
+        <h3>Variáveis de Ambiente para Produção</h3>
+        <div class="doc-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Variável</th>
+                <th>Obrigatória</th>
+                <th>Descrição</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>PORT</code></td>
+                <td>Não</td>
+                <td>Porta do servidor (default: 3000)</td>
+              </tr>
+              <tr>
+                <td><code>NODE_ENV</code></td>
+                <td>Não</td>
+                <td>Ambiente de execução</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr>
+
+      <!-- ── 17. Changelog ── -->
+      <section id="changelog">
+        <h2><span class="section-number">16</span> Changelog</h2>
+
+        <div class="version-timeline">
+          <div class="version-item">
+            <span class="version-tag">v1.0.0</span>
+            <span class="version-date">Setembro 2026</span>
+            <div class="version-desc">
+              <ul>
+                <li>Lançamento inicial com 4 telas (CLI, Formulário, Chat, Dashboard)</li>
+                <li>API REST completa com 6 endpoints</li>
+                <li>WebSocket via Socket.IO para comunicação em tempo real</li>
+                <li>Design responsivo com suporte a dispositivos touch</li>
+                <li>Persistência de sessão via localStorage</li>
+                <li>Easter eggs: Matrix Rain e "Apagar Site"</li>
+                <li>Documentação técnica completa com exportação PDF</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Footer ── -->
+      <footer class="doc-footer">
+        <p>Projeto IHC — Interação Humano-Computador &bull; Documentação gerada em Setembro 2026</p>
+        <p style="margin-top: 4px; font-size: 12px;">
+          Desenvolvido com ❤️ utilizando Node.js, Express, Socket.IO e JavaScript Vanilla
+        </p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       SCRIPTS
+       ═══════════════════════════════════ -->
+  <script>
+    // ── Sidebar Toggle (Mobile) ──
+    function toggleSidebar() {
+      const sidebar = document.getElementById('doc-sidebar');
+      sidebar.classList.toggle('open');
+    }
+
+    // Fechar sidebar ao clicar em um link (mobile)
+    document.querySelectorAll('.doc-sidebar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        const sidebar = document.getElementById('doc-sidebar');
+        if (window.innerWidth <= 900) {
+          sidebar.classList.remove('open');
+        }
+      });
+    });
+
+    // ── Active Link Tracking (Scroll Spy) ──
+    const sections = document.querySelectorAll('section[id]');
+    const sidebarLinks = document.querySelectorAll('.doc-sidebar-link');
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-80px 0px -60% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.getAttribute('id');
+          sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${id}`) {
+              link.classList.add('active');
+            }
+          });
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach(section => observer.observe(section));
+
+    // ── Exportar PDF ──
+    function exportarPDF() {
+      const btn = document.getElementById('btn-pdf');
+      const originalHTML = btn.innerHTML;
+      btn.classList.add('loading');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+          <path d="M21 12a9 9 0 11-6.219-8.56"></path>
+        </svg>
+        <span>Gerando...</span>
+      `;
+
+      // Adicionar CSS de animação do spinner
+      const style = document.createElement('style');
+      style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+      document.head.appendChild(style);
+
+      const content = document.getElementById('doc-content');
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'Projeto_IHC_Documentacao.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          logging: false,
+          letterRendering: true,
+          backgroundColor: '#0a0a0f'
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait'
+        },
+        pagebreak: {
+          mode: ['avoid-all', 'css', 'legacy']
+        }
+      };
+
+      html2pdf()
+        .set(opt)
+        .from(content)
+        .save()
+        .then(() => {
+          btn.classList.remove('loading');
+          btn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Concluído!</span>
+          `;
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 2500);
+        })
+        .catch((err) => {
+          console.error('Erro ao gerar PDF:', err);
+          btn.classList.remove('loading');
+          btn.innerHTML = originalHTML;
+          alert('Erro ao gerar o PDF. Verifique o console para detalhes.');
+        });
+    }
+  </script>
+
+</body>
+
+</html>
